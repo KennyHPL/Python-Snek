@@ -17,10 +17,10 @@ class Food(object):
         self.pos = pos
     def __repr__(self):
         return 'Pos: {}'.format(self.pos)
-
 pg.init()
 screen = pg.display.set_mode((700,700))
 pg.display.set_caption('Snake')
+###############################################################################
 
 done = False
 clock = pg.time.Clock()
