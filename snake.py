@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+
 class Snake(object):
     def __init__(self, length, pos):
         self.length = length
@@ -10,7 +11,6 @@ class Snake(object):
         return self.length
     def __repr__(self):
         return 'Length: {} \nPos: {}'.format(self.length,self.pos)
-
 
 class Food(object):
     def __init__(self, pos):
