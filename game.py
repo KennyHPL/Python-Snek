@@ -2,15 +2,19 @@ import pygame as pg
 import random
 from snake import *
 
-width = 600; height = 600
+width = 900; height = 900
 xVel = 0; yVel = 0
 done = False
-blockSize = 15
+blockSize = 20
 snake = Snake()
 food = Food()
+score = 0
 
 pg.init()
 screen = pg.display.set_mode((width,height))
+pg.font.init()
+myfont = pg.font.SysFont('Comic Sans MS', 15)
+
 pg.display.set_caption('Snake')
 clock = pg.time.Clock()
 
@@ -36,19 +40,22 @@ while not done:
             #### ESC ####
             if key == pg.K_ESCAPE:
                 done = True
+
     #Make the screen white
     screen.fill((255,255,255))
 
     #draw the food
-    if food.getPos == [0,0]:
+    if food.getPos() == [0,0]:
         food.setPos([random.randint(0,width/blockSize-1)*blockSize,
                      random.randint(0,height/blockSize-1)*blockSize])
+
     pg.draw.rect(screen, (255,0,0),
                 [food.pos[0], food.pos[1], blockSize, blockSize])
 
     #Check if the head of the snake is on top of the food
     if snake.pos == food.pos:
         snake.length += 1
+        score += 10
         food.setPos([random.randint(0,width/blockSize-1)*blockSize,
                      random.randint(0,height/blockSize-1)*blockSize])
 
@@ -70,5 +77,7 @@ while not done:
                     [snake.body[i][0], snake.body[i][1], blockSize, blockSize])
 
     #Update the screen
+    textSurface = myfont.render('Score: {}'.format(score), False, (0,0,0))
+    screen.blit(textSurface, (30,30))
     pg.display.flip()
-    clock.tick(24)
+    clock.tick(30)
