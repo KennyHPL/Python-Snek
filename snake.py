@@ -62,3 +62,5 @@ while not done:
     pg.draw.rect(screen, (0,0,0),[xPos, yPos, 20, 20])
     pg.display.flip()
     clock.tick(60)
+
+print('Done')
