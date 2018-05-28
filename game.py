@@ -1,67 +1,59 @@
 import pygame as pg
 import random
+from snake import *
 
-class Snake(object):
-    def __init__(self, length, pos):
-        self.length = length
-        self.pos = pos
-        self.body = []
-
-    def __len__(self):
-        return self.length
-    def __repr__(self):
-        return 'Length: {} \nPos: {}'.format(self.length,self.pos)
-
-class Food(object):
-    def __init__(self, pos):
-        self.pos = pos
-    def __repr__(self):
-        return 'Pos: {}'.format(self.pos)
-###############################################################################
+width = 600; height = 600
+xVel = 0; yVel = 0
+done = False
+blockSize = 15
+snake = Snake()
+food = Food()
 
 pg.init()
-screen = pg.display.set_mode((700,700))
+screen = pg.display.set_mode((width,height))
 pg.display.set_caption('Snake')
-
-done = False
 clock = pg.time.Clock()
-snake = Snake(1, [0,0])
-food = Food([random.randint(0,34)*20, random.randint(0,34)*20])
 
-xVel = 0
-yVel = 0
 while not done:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             done = True
         elif event.type == pg.KEYDOWN:
             key = event.key
+            #### ARROW KEYS ####
             if key == pg.K_DOWN:
-                yVel = 20
+                yVel = blockSize
                 xVel = 0
             if key == pg.K_UP:
-                yVel = -20
+                yVel = -blockSize
                 xVel = 0
             if key == pg.K_LEFT:
-                xVel = -20
+                xVel = -blockSize
                 yVel = 0
             if key == pg.K_RIGHT:
-                xVel = 20
+                xVel = blockSize
                 yVel = 0
-
+            #### ESC ####
+            if key == pg.K_ESCAPE:
+                done = True
     #Make the screen white
     screen.fill((255,255,255))
 
     #draw the food
-    pg.draw.rect(screen, (255,0,0), [food.pos[0], food.pos[1], 20, 20])
+    if food.getPos == [0,0]:
+        food.setPos([random.randint(0,width/blockSize-1)*blockSize,
+                     random.randint(0,height/blockSize-1)*blockSize])
+    pg.draw.rect(screen, (255,0,0),
+                [food.pos[0], food.pos[1], blockSize, blockSize])
 
     #Check if the head of the snake is on top of the food
     if snake.pos == food.pos:
         snake.length += 1
-        food.pos = [random.randint(0,34)*20, random.randint(0,34)*20]
+        food.setPos([random.randint(0,width/blockSize-1)*blockSize,
+                     random.randint(0,height/blockSize-1)*blockSize])
 
     #Update the position of the snake
-    snake.pos = [(snake.pos[0]+xVel)%700, (snake.pos[1]+yVel)%700]
+    snake.pos = [(snake.pos[0]+xVel)%width, (snake.pos[1]+yVel)%height]
 
     #check if head in on the body
     if snake.pos in snake.body and snake.pos != [0,0]:
@@ -74,7 +66,8 @@ while not done:
 
     #draw the body
     for i in range(0, len(snake.body)):
-        pg.draw.rect(screen, (0,0,0), [snake.body[i][0], snake.body[i][1], 20, 20])
+        pg.draw.rect(screen, (0,0,0),
+                    [snake.body[i][0], snake.body[i][1], blockSize, blockSize])
 
     #Update the screen
     pg.display.flip()
